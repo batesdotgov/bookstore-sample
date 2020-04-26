@@ -1,0 +1,20 @@
+# Group Books
+
+## Get the recent books [GET /books]
+
++ Response 200 (application/json)
+    + Attributes (array[Book])
+
+
+## Get details of a book [GET /books/{id}]
+
++ Parameters
+    + id: 1 (number) - The book id
+
++ Response 200 (application/json)
+    + Attributes (Book)
++ Response 400 (application/json)
+    + Attributes (Bad Request)
++ Response 404 (application/json)
+    + Attributes (Book Not Found)
+

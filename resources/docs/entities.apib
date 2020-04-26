@@ -1,0 +1,37 @@
+# Data Structures
+
+## Registered User (object)
++ email: `contact@diegoholiveira.com` (string, required) - The user email address
++ password: `12345678` (string, required) - The user password
+
+## Unregistered User (object)
++ name: `Diego Henrique Oliveira` (string, required) - The user full name
++ Include Registered User
+
+## Generic Book (object)
++ title: `The Hitchhiker's Guide to the Galaxy` (string, required)
++ author: `Douglas Adams` (string, required)
++ price: 19.9 (number, required)
+
+## Book (object)
++ id: 1 (number, required) - The book ID
++ Include Generic Book
++ description: `a great book` (string, required) - The book description
+
+## Purchased Book (object)
++ Include Generic Book
++ quantity: 1 (number, required)
+
+## Purchase (object)
++ id: 1 (number, required) - The ID of the purchase
++ amount: 19.9 (number, required) - The amount of the purchase
++ books (array[Purchased Book], required) - The books of the purchase
+
+## Book Order (object)
++ book_id: 1 (number, required) - The book id
++ price: 19.9 (number, required) - The book price (per unit)
++ quantity: 1 (number, required) - The quantity to be purchased
+
+## New Purchase (object)
++ user_id: 1 (number, required) - The user id doing the purchase
++ books (array[Book Order], required) - The books of this purchase

@@ -1,0 +1,24 @@
+# Group Users
+
+## Register an user [POST /users]
+
++ Request (application/json)
+    + Attributes (Unregistered User)
+
++ Response 201 (application/json)
++ Response 400 (application/json)
+    + Attributes (Register Bad Request)
+
+
+## Get the purchases history of an user [GET /users/{id}/purchases]
+
++ Parameters
+    + id: 1 (number) - The user id
+
++ Response 200 (application/json)
+    + Attributes (array[Purchase])
++ Response 400 (application/json)
+    + Attributes (Bad Request)
++ Response 404 (application/json)
+    + Attributes (User Not Found)
+
