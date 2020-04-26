@@ -1,0 +1,27 @@
+run:
+  timeout: 5m
+  build-tags:
+    - integration
+linters-settings:
+  goimports:
+    local-prefixes: github.com/diegoholiveira/bookstore-sample
+  gocyclo:
+    min-complexity: 20
+linters:
+  disable-all: true
+  enable:
+    - bodyclose
+    - deadcode
+    - errcheck
+    - gocyclo
+    - goimports
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - structcheck
+    - typecheck
+    - unparam
+    - unused
+    - varcheck
+    - whitespace

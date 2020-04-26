@@ -1,0 +1,20 @@
+---
+version: "3.7"
+services:
+  bookstore:
+    build: .
+    env_file:
+      - variables.env
+    depends_on:
+      - mysql-server
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/app
+  mysql-server:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    env_file:
+      - variables.env
