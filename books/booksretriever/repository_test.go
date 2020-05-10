@@ -44,6 +44,7 @@ func TestBookFindByID_success(t *testing.T) {
 		Author:      "Douglas Adams",
 		Description: "A great book, please read it",
 		Price:       19.9,
+		Available:   100,
 	}
 
 	assert.Nil(t, err)
@@ -65,6 +66,7 @@ func TestBookFindRecents(t *testing.T) {
 			Author:      "Douglas Adams",
 			Description: "A great book, please read it",
 			Price:       19.9,
+			Available:   100,
 		},
 		{
 			ID:          3,
@@ -72,6 +74,7 @@ func TestBookFindRecents(t *testing.T) {
 			Author:      "Douglas Adams",
 			Description: "A great book, please read it",
 			Price:       19.9,
+			Available:   100,
 		},
 		{
 			ID:          2,
@@ -79,6 +82,7 @@ func TestBookFindRecents(t *testing.T) {
 			Author:      "Douglas Adams",
 			Description: "A great book, please read it",
 			Price:       19.9,
+			Available:   100,
 		},
 		{
 			ID:          1,
@@ -86,6 +90,7 @@ func TestBookFindRecents(t *testing.T) {
 			Author:      "Douglas Adams",
 			Description: "A great book, please read it",
 			Price:       19.9,
+			Available:   100,
 		},
 	}
 

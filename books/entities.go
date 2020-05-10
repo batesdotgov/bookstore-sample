@@ -9,6 +9,7 @@ type (
 		Author      string  `json:"author"`
 		Description string  `json:"description"`
 		Price       float64 `json:"price"`
+		Available   uint32  `json:"available"`
 	}
 
 	Books []Book

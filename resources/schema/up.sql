@@ -12,6 +12,7 @@ CREATE TABLE `books` (
   `author` VARCHAR(45) NOT NULL,
   `description` TEXT NOT NULL,
   `price` DECIMAL(8,2) NOT NULL,
+  `available` INT UNSIGNED NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 

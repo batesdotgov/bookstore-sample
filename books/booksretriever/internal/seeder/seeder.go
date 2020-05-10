@@ -9,6 +9,7 @@ func Seed(db *sql.DB) {
 		"Douglas Adams",
 		"A great book, please read it",
 		19.9,
+		100,
 	)
 	insert(
 		db,
@@ -16,6 +17,7 @@ func Seed(db *sql.DB) {
 		"Douglas Adams",
 		"A great book, please read it",
 		19.9,
+		100,
 	)
 	insert(
 		db,
@@ -23,6 +25,7 @@ func Seed(db *sql.DB) {
 		"Douglas Adams",
 		"A great book, please read it",
 		19.9,
+		100,
 	)
 	insert(
 		db,
@@ -30,12 +33,13 @@ func Seed(db *sql.DB) {
 		"Douglas Adams",
 		"A great book, please read it",
 		19.9,
+		100,
 	)
 }
 
 func insert(db *sql.DB, args ...interface{}) {
 	_, err := db.Exec(
-		"INSERT INTO books (title, author, description, price) VALUES (?, ?, ?, ?)",
+		"INSERT INTO books (title, author, description, price, available) VALUES (?, ?, ?, ?, ?)",
 		args...,
 	)
 	if err != nil {
