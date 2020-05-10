@@ -24,9 +24,9 @@ func (r repository) FindBookByID(ctx context.Context, id uint64) (books.Book, er
 
 	err := r.db.QueryRowContext(
 		ctx,
-		"SELECT id, title, author, description, price FROM books WHERE id = ? LIMIT 1",
+		"SELECT id, title, author, description, price, available FROM books WHERE id = ? LIMIT 1",
 		id,
-	).Scan(&book.ID, &book.Title, &book.Author, &book.Description, &book.Price)
+	).Scan(&book.ID, &book.Title, &book.Author, &book.Description, &book.Price, &book.Available)
 
 	switch {
 	case err == sql.ErrNoRows:
@@ -39,7 +39,7 @@ func (r repository) FindBookByID(ctx context.Context, id uint64) (books.Book, er
 func (r repository) FindRecents(ctx context.Context) (books.Books, error) {
 	rows, err := r.db.QueryContext(
 		ctx,
-		"SELECT id, title, author, description, price FROM books ORDER BY id DESC",
+		"SELECT id, title, author, description, price, available FROM books ORDER BY id DESC",
 	)
 
 	if err != nil {
@@ -56,6 +56,7 @@ func (r repository) FindRecents(ctx context.Context) (books.Books, error) {
 			&book.Author,
 			&book.Description,
 			&book.Price,
+			&book.Available,
 		)
 		if err != nil {
 			return books.Books{}, err

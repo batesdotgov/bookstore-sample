@@ -22,6 +22,7 @@ func TestListingBooks(t *testing.T) {
 			Author:      "Douglas Adams",
 			Description: "A great book, for sure. Read it",
 			Price:       19.9,
+			Available:   100,
 		},
 		{
 			ID:          2,
@@ -29,6 +30,7 @@ func TestListingBooks(t *testing.T) {
 			Author:      "Douglas Adams",
 			Description: "A great book, for sure. Read it",
 			Price:       19.9,
+			Available:   100,
 		},
 		{
 			ID:          3,
@@ -36,6 +38,7 @@ func TestListingBooks(t *testing.T) {
 			Author:      "Douglas Adams",
 			Description: "A great book, for sure. Read it",
 			Price:       19.9,
+			Available:   100,
 		},
 		{
 			ID:          4,
@@ -43,6 +46,7 @@ func TestListingBooks(t *testing.T) {
 			Author:      "Douglas Adams",
 			Description: "A great book, for sure. Read it",
 			Price:       19.9,
+			Available:   100,
 		},
 	}
 
@@ -68,28 +72,32 @@ func TestListingBooks(t *testing.T) {
 			"title": "The Hitchhiker's Guide to the Galaxy",
 			"author": "Douglas Adams",
 			"description": "A great book, for sure. Read it",
-			"price": 19.9
+			"price": 19.9,
+			"available": 100
 		},
 		{
 			"id": 2,
 			"title": "The Restaurant at the End of the Universe",
 			"author": "Douglas Adams",
 			"description": "A great book, for sure. Read it",
-			"price": 19.9
+			"price": 19.9,
+			"available": 100
 		},
 		{
 			"id": 3,
 			"title": "Life, the Universe and Everything",
 			"author": "Douglas Adams",
 			"description": "A great book, for sure. Read it",
-			"price": 19.9
+			"price": 19.9,
+			"available": 100
 		},
 		{
 			"id": 4,
 			"title": "So Long, and Thanks For All the Fish",
 			"author": "Douglas Adams",
 			"description": "A great book, for sure. Read it",
-			"price": 19.9
+			"price": 19.9,
+			"available": 100
 		}
 	]`
 
@@ -145,6 +153,7 @@ func TestGettingBookDetails_successfully(t *testing.T) {
 		Author:      "Douglas Adams",
 		Description: "A great book, for sure. Read it",
 		Price:       19.9,
+		Available:   100,
 	}
 
 	r := httptest.NewRequest("GET", "/books/1", nil)
@@ -170,7 +179,8 @@ func TestGettingBookDetails_successfully(t *testing.T) {
 		"title": "The Hitchhiker's Guide to the Galaxy",
 		"author": "Douglas Adams",
 		"description": "A great book, for sure. Read it",
-		"price": 19.9
+		"price": 19.9,
+		"available": 100
 	}`
 
 	if assert.Equal(t, http.StatusOK, resp.StatusCode) {

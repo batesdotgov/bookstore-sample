@@ -12,11 +12,12 @@ func Seed(db *sql.DB) {
 	)
 	insert(
 		db,
-		"INSERT INTO books (title, author, description, price) VALUES (?, ?, ?, ?)",
+		"INSERT INTO books (title, author, description, price, available) VALUES (?, ?, ?, ?, ?)",
 		"The Hitchhiker's Guide to the Galaxy",
 		"Douglas Adams",
 		"A great book, please read it",
 		19.9,
+		100,
 	)
 }
 
