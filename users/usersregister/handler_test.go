@@ -31,9 +31,9 @@ func TestUserRegisterHandler_perfect_payload(t *testing.T) {
 		Password: "12345678",
 	}
 
-	persister := new(mocks.UserPersister)
+	persister := new(mocks.UserRegister)
 	persister.
-		On("Persist", mock.Anything, u).
+		On("Register", mock.Anything, &u).
 		Return(nil)
 
 	h := NewUserRegisterHandler(persister)
@@ -64,7 +64,7 @@ func TestUserRegisterHandler_perfect_payload_twice(t *testing.T) {
 	r := httptest.NewRequest("POST", "/users", strings.NewReader(input))
 	w := httptest.NewRecorder()
 
-	persister := new(mocks.UserPersister)
+	persister := new(mocks.UserRegister)
 
 	h := NewUserRegisterHandler(persister)
 	h.ServeHTTP(w, r)
@@ -92,7 +92,7 @@ func TestUserRegisterHandler_malformed_json(t *testing.T) {
 	r := httptest.NewRequest("POST", "/users", strings.NewReader(input))
 	w := httptest.NewRecorder()
 
-	persister := new(mocks.UserPersister)
+	persister := new(mocks.UserRegister)
 
 	h := NewUserRegisterHandler(persister)
 	h.ServeHTTP(w, r)
@@ -119,7 +119,7 @@ func TestUserRegisterHandler_payload_without_name(t *testing.T) {
 	r := httptest.NewRequest("POST", "/users", strings.NewReader(input))
 	w := httptest.NewRecorder()
 
-	persister := new(mocks.UserPersister)
+	persister := new(mocks.UserRegister)
 
 	h := NewUserRegisterHandler(persister)
 	h.ServeHTTP(w, r)
@@ -148,7 +148,7 @@ func TestUserRegisterHandler_payload_with_an_invalid_email(t *testing.T) {
 	r := httptest.NewRequest("POST", "/users", strings.NewReader(input))
 	w := httptest.NewRecorder()
 
-	persister := new(mocks.UserPersister)
+	persister := new(mocks.UserRegister)
 
 	h := NewUserRegisterHandler(persister)
 	h.ServeHTTP(w, r)
@@ -183,9 +183,9 @@ func TestUserRegisterHandler_mysql_is_down(t *testing.T) {
 		Password: "12345678",
 	}
 
-	persister := new(mocks.UserPersister)
+	persister := new(mocks.UserRegister)
 	persister.
-		On("Persist", mock.Anything, u).
+		On("Register", mock.Anything, &u).
 		Return(errors.New("MySQL is down, please try again"))
 
 	h := NewUserRegisterHandler(persister)
@@ -199,6 +199,45 @@ func TestUserRegisterHandler_mysql_is_down(t *testing.T) {
 	}`
 
 	if assert.Equal(t, http.StatusInternalServerError, resp.StatusCode) {
+		persister.AssertExpectations(t)
+
+		body, _ := ioutil.ReadAll(resp.Body)
+		assert.JSONEq(t, expected, string(body))
+	}
+}
+
+func TestUserRegisterHandler_user_already_registered(t *testing.T) {
+	input := `{
+		"name": "Diego Henrique Oliveira",
+		"email": "contact@diegoholiveira.com",
+		"password": "12345678"
+	}`
+
+	r := httptest.NewRequest("POST", "/users", strings.NewReader(input))
+	w := httptest.NewRecorder()
+
+	u := users.User{
+		Name:     "Diego Henrique Oliveira",
+		Email:    "contact@diegoholiveira.com",
+		Password: "12345678",
+	}
+
+	persister := new(mocks.UserRegister)
+	persister.
+		On("Register", mock.Anything, &u).
+		Return(users.ErrEmailAlreadyInUse{Email: u.Email})
+
+	h := NewUserRegisterHandler(persister)
+	h.ServeHTTP(w, r)
+
+	resp := w.Result()
+	defer resp.Body.Close()
+
+	expected := `{
+		"error": "The e-mail 'contact@diegoholiveira.com' is already in use"
+	}`
+
+	if assert.Equal(t, http.StatusBadRequest, resp.StatusCode) {
 		persister.AssertExpectations(t)
 
 		body, _ := ioutil.ReadAll(resp.Body)

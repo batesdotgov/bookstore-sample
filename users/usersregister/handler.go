@@ -1,9 +1,10 @@
-//go:generate mockery -name=UserPersister -output=./internal/mocks
+//go:generate mockery -name=UserRegister -output=./internal/mocks
 package usersregister
 
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/diegoholiveira/bookstore-sample/pkg/http/render"
@@ -11,16 +12,16 @@ import (
 )
 
 type (
-	UserPersister interface {
-		Persist(context.Context, users.User) error
+	UserRegister interface {
+		Register(context.Context, *users.User) error
 	}
 
 	UserRegisterHandler struct {
-		persister UserPersister
+		persister UserRegister
 	}
 )
 
-func NewUserRegisterHandler(persister UserPersister) UserRegisterHandler {
+func NewUserRegisterHandler(persister UserRegister) UserRegisterHandler {
 	return UserRegisterHandler{
 		persister: persister,
 	}
@@ -54,12 +55,22 @@ func (h UserRegisterHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.persister.Persist(r.Context(), u)
-	if err != nil {
-		render.JSON(w, http.StatusInternalServerError, map[string]string{
-			"error": err.Error(),
+	var emailInUseErr users.ErrEmailAlreadyInUse
+
+	err = h.persister.Register(r.Context(), &u)
+	if errors.As(err, &emailInUseErr) {
+		render.JSON(w, http.StatusBadRequest, map[string]string{
+			"error": emailInUseErr.Error(),
 		})
+		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
+	if err == nil {
+		w.WriteHeader(http.StatusCreated)
+		return
+	}
+
+	render.JSON(w, http.StatusInternalServerError, map[string]string{
+		"error": err.Error(),
+	})
 }

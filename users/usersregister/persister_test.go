@@ -4,31 +4,32 @@ package usersregister
 
 import (
 	"context"
-	"database/sql"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/diegoholiveira/bookstore-sample/internal/database"
 	"github.com/diegoholiveira/bookstore-sample/internal/schema"
 	"github.com/diegoholiveira/bookstore-sample/users"
 )
-
-var db *sql.DB
 
 func TestUserIsPersistedSuccessfully(t *testing.T) {
 	schema.Up(db)
 	defer schema.Down(db)
 
-	r := NewUserPersister(db)
-	err := r.Persist(context.Background(), users.User{
+	u := users.User{
 		Name:     "Diego Henrique Oliveira",
 		Email:    "contact@diegoholiveira.com",
 		Password: "12345678",
-	})
+	}
 
-	if assert.Nil(t, err) {
+	r := NewDatabasePersister(db)
+
+	if assert.Nil(t, r.Persist(context.Background(), &u)) {
+		var expectedID uint64 = 1
+
 		assertUserIsSaved(t)
+
+		assert.Equal(t, expectedID, u.ID)
 	}
 }
 
@@ -41,12 +42,4 @@ func assertUserIsSaved(t *testing.T) {
 	err := db.QueryRow("SELECT count(id) as total FROM users").Scan(&users)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, users)
-}
-
-func init() {
-	var err error
-	db, err = database.NewMySQLConnection()
-	if err != nil {
-		panic(err)
-	}
 }

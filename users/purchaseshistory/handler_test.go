@@ -27,7 +27,7 @@ func TestPurchasesHistoryHandler_with_user_not_registered(t *testing.T) {
 
 	userFinder.
 		On("FindUserByID", mock.Anything, expectedID).
-		Return(users.User{}, users.UserNotFoundErr)
+		Return(users.User{}, users.ErrUserNotFound{})
 
 	h := createHandler(userFinder, purchasesFinder)
 	h.ServeHTTP(w, r)
