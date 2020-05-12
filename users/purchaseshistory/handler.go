@@ -4,6 +4,7 @@ package purchaseshistory
 
 import (
 	"context"
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -44,10 +45,11 @@ func (h PurchasesHistoryHandler) ServeHTTP(w http.ResponseWriter, r *http.Reques
 		return // stop here
 	}
 
+	var errNotFound users.ErrUserNotFound
 	user, err := h.userFinder.FindUserByID(r.Context(), userID)
-	if err == users.UserNotFoundErr {
+	if errors.As(err, &errNotFound) {
 		render.JSON(w, http.StatusNotFound, map[string]string{
-			"error": "User not found",
+			"error": errNotFound.Error(),
 		})
 
 		return // stop here

@@ -1,7 +1,7 @@
 package users
 
 import (
-	"errors"
+	"fmt"
 
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
@@ -31,9 +31,14 @@ type (
 	}
 
 	Purchases []Purchase
-)
 
-var UserNotFoundErr error = errors.New("User not found")
+	ErrEmailAlreadyInUse struct {
+		Email string
+	}
+
+	ErrUserNotFound struct {
+	}
+)
 
 func (u User) ValidateRegisterInput() error {
 	return validation.ValidateStruct(&u,
@@ -44,4 +49,12 @@ func (u User) ValidateRegisterInput() error {
 		// Password can't be empty and must contain between 8 to 100 characters
 		validation.Field(&u.Password, validation.Required, validation.Length(8, 100)),
 	)
+}
+
+func (e ErrEmailAlreadyInUse) Error() string {
+	return fmt.Sprintf("The e-mail '%s' is already in use", e.Email)
+}
+
+func (e ErrUserNotFound) Error() string {
+	return "User not found"
 }
