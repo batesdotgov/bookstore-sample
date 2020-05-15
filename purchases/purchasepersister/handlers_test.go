@@ -39,9 +39,9 @@ func TestPurchase_success(t *testing.T) {
 	r := httptest.NewRequest("POST", "/purchases", strings.NewReader(input))
 	w := httptest.NewRecorder()
 
-	persister := new(mocks.PurchasePersister)
+	persister := new(mocks.Purchaser)
 	persister.
-		On("Persist", mock.Anything, purchase).
+		On("MakePurchase", mock.Anything, purchase).
 		Return(nil)
 
 	h := NewPurchaseHandler(persister)
