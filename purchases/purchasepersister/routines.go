@@ -22,7 +22,7 @@ type (
 	}
 )
 
-func NewPurchaserWithNewUser(db *sql.DB, registrationServiceFactory UserRegisterServiceFactory) PurchaseRoutineWithNewUser {
+func NewPurchaserWithNewUser(db *sql.DB, registrationServiceFactory UserRegisterServiceFactory) PurchaserWithNewUser {
 	return PurchaseRoutineWithNewUser{
 		db: db,
 
@@ -30,7 +30,7 @@ func NewPurchaserWithNewUser(db *sql.DB, registrationServiceFactory UserRegister
 	}
 }
 
-func NewPurchaserWithRegisteredUser(db *sql.DB) PurchaseRoutineWithRegisteredUser {
+func NewPurchaserWithRegisteredUser(db *sql.DB) PurchaserWithRegisteredUser {
 	return PurchaseRoutineWithRegisteredUser{
 		db: db,
 	}
