@@ -12,7 +12,10 @@ var Module = fx.Options(
 
 var factories = fx.Provide(
 	NewPurchaseHandler,
-	NewPurchasePersister,
+	NewUserRegisterServiceFactory,
+	NewPurchaserService,
+	NewPurchaserWithNewUser,
+	NewPurchaserWithRegisteredUser,
 )
 
 func registerEndpoints(router chi.Router, handler PurchaseHandler) {

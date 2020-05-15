@@ -1,10 +1,11 @@
-//go:generate mockery -name=PurchasePersister -output=./internal/mocks
+//go:generate mockery -name=Purchaser -output=./internal/mocks
 
 package purchasepersister
 
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/diegoholiveira/bookstore-sample/pkg/http/render"
@@ -12,18 +13,18 @@ import (
 )
 
 type (
-	PurchasePersister interface {
-		Persist(context.Context, purchases.Purchase) error
+	Purchaser interface {
+		MakePurchase(context.Context, purchases.Purchase) error
 	}
 
 	PurchaseHandler struct {
-		persister PurchasePersister
+		purchaser Purchaser
 	}
 )
 
-func NewPurchaseHandler(persister PurchasePersister) PurchaseHandler {
+func NewPurchaseHandler(p Purchaser) PurchaseHandler {
 	return PurchaseHandler{
-		persister: persister,
+		purchaser: p,
 	}
 }
 
@@ -49,12 +50,21 @@ func (h PurchaseHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.persister.Persist(r.Context(), purchase)
-	if err != nil {
-		render.JSON(w, http.StatusInternalServerError, map[string]string{
-			"error": err.Error(),
-		})
+	err = h.purchaser.MakePurchase(r.Context(), purchase)
+	if err == nil {
+		w.WriteHeader(http.StatusCreated)
+		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
+	var errPurchase ErrPurchaseInvalid
+	if errors.As(err, &errPurchase) {
+		render.JSON(w, http.StatusBadRequest, map[string]string{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	render.JSON(w, http.StatusInternalServerError, map[string]string{
+		"error": err.Error(),
+	})
 }

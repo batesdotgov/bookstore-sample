@@ -19,6 +19,15 @@ func Seed(db *sql.DB) {
 		19.9,
 		100,
 	)
+	insert(
+		db,
+		"INSERT INTO books (title, author, description, price, available) VALUES (?, ?, ?, ?, ?)",
+		"The Restaurant at the End of the Universe",
+		"Douglas Adams",
+		"A great book, please read it",
+		19.9,
+		0,
+	)
 }
 
 func insert(db *sql.DB, sql string, args ...interface{}) {
