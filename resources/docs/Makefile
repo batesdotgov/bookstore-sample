@@ -2,4 +2,4 @@ all: generate
 
 .PHONY:
 generate:
-	@aglio -i api.apib -o api.html --theme-full-width 2>&1
+	@aglio -i api.apib -o ../../index.html --theme-full-width 2>&1
