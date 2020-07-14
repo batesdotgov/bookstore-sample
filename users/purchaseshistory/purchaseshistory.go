@@ -13,7 +13,17 @@ var Module = fx.Options(
 var factories = fx.Provide(
 	NewPurchasesHistoryHandler,
 	NewPurchasesRepository,
+	NewPurchasesFinder,
+	NewUserFinder,
 )
+
+func NewPurchasesFinder(repo PurchasesRepository) PurchasesFinder {
+	return repo
+}
+
+func NewUserFinder(repo PurchasesRepository) UserFinder {
+	return repo
+}
 
 func registerEndpoints(router chi.Router, handler PurchasesHistoryHandler) {
 	router.Method("GET", "/users/{id}/purchases", handler)

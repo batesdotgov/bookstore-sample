@@ -15,6 +15,7 @@ import (
 	"github.com/diegoholiveira/bookstore-sample/internal/database"
 	"github.com/diegoholiveira/bookstore-sample/internal/schema"
 	"github.com/diegoholiveira/bookstore-sample/purchases/purchasepersister"
+	"github.com/diegoholiveira/bookstore-sample/users/purchaseshistory"
 	"github.com/diegoholiveira/bookstore-sample/users/usersregister"
 )
 
@@ -93,6 +94,7 @@ func main() {
 			Middlewares,
 			ServerDependencies,
 			usersregister.Module,
+			purchaseshistory.Module,
 			booksretriever.Module,
 			purchasepersister.Module,
 		),

@@ -31,6 +31,13 @@ func NewPurchasesRepository(db *sql.DB) PurchasesRepository {
 	}
 }
 
+func (r PurchasesRepository) FindUserByID(ctx context.Context, id uint64) (users.User, error) {
+	// TODO fake return because I'm lazy
+	return users.User{
+		ID: id,
+	}, nil
+}
+
 func (r PurchasesRepository) FindPurchasesByUser(ctx context.Context, user users.User) (users.Purchases, error) {
 	rows, err := r.db.QueryContext(
 		ctx,
