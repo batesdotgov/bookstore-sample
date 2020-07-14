@@ -1,23 +1,19 @@
 package purchasepersister
 
 import (
+	"database/sql"
+
 	"github.com/go-chi/chi"
-	"go.uber.org/fx"
+
+	"github.com/diegoholiveira/bookstore-sample/users/usersregister"
 )
 
-var Module = fx.Options(
-	fx.Invoke(registerEndpoints),
-	factories,
-)
+func SetupModule(router chi.Router, db *sql.DB, mailer usersregister.WelcomeMailer) {
+	registrationServiceFactory := NewUserRegisterServiceFactory(mailer)
+	newUserRoutine := NewPurchaserWithNewUser(db, registrationServiceFactory)
+	registeredUserRoutine := NewPurchaserWithRegisteredUser(db)
+	purchaser := NewPurchaserService(registeredUserRoutine, newUserRoutine)
+	handler := NewPurchaseHandler(purchaser)
 
-var factories = fx.Provide(
-	NewPurchaseHandler,
-	NewUserRegisterServiceFactory,
-	NewPurchaserService,
-	NewPurchaserWithNewUser,
-	NewPurchaserWithRegisteredUser,
-)
-
-func registerEndpoints(router chi.Router, handler PurchaseHandler) {
 	router.Method("POST", "/purchases", handler)
 }

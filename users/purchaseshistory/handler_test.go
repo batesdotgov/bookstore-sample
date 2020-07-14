@@ -189,8 +189,6 @@ func TestPurchasesHistoryHandler_successfully(t *testing.T) {
 // to allow chi.URLParam work properly
 func createHandler(userFinder UserFinder, purchasesFinder PurchasesFinder) chi.Router {
 	r := chi.NewRouter()
-
-	registerEndpoints(r, NewPurchasesHistoryHandler(userFinder, purchasesFinder))
-
+	r.Method("GET", "/users/{id}/purchases", NewPurchasesHistoryHandler(userFinder, purchasesFinder))
 	return r
 }

@@ -1,29 +1,17 @@
 package booksretriever
 
 import (
+	"database/sql"
+
 	"github.com/go-chi/chi"
-	"go.uber.org/fx"
 )
 
-var Module = fx.Options(
-	fx.Invoke(registerEndpoints),
-	factories,
-)
+func SetupModule(router chi.Router, db *sql.DB) {
+	repo := NewBooksRetrieverRepository(db)
 
-var factories = fx.Provide(
-	NewBooksAvailableHandler,
-	NewBookDetailsHandler,
-	NewBooksRetrieverRepository,
-)
+	booksAvailableHandler := NewBooksAvailableHandler(repo)
+	booksDetailsHandler := NewBookDetailsHandler(repo)
 
-type Handlers struct {
-	fx.In
-
-	BooksAvailable BooksAvailableHandler
-	BookDetails    BookDetailsHandler
-}
-
-func registerEndpoints(router chi.Router, handlers Handlers) {
-	router.Method("GET", "/books", handlers.BooksAvailable)
-	router.Method("GET", "/books/{id}", handlers.BookDetails)
+	router.Method("GET", "/books", booksAvailableHandler)
+	router.Method("GET", "/books/{id}", booksDetailsHandler)
 }

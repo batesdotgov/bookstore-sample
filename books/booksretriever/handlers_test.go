@@ -193,10 +193,6 @@ func TestGettingBookDetails_successfully(t *testing.T) {
 // to allow chi.URLParam work properly
 func createHandler(f BooksFinder) chi.Router {
 	r := chi.NewRouter()
-
-	registerEndpoints(r, Handlers{
-		BookDetails: NewBookDetailsHandler(f),
-	})
-
+	r.Method("GET", "/books/{id}", NewBookDetailsHandler(f))
 	return r
 }
