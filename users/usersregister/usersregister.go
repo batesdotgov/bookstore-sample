@@ -7,10 +7,7 @@ import (
 )
 
 func SetupModule(router chi.Router, db *sql.DB, mailer WelcomeMailer) {
-	constraints := NewUserConstraints(db)
-	persister := NewDatabasePersister(db)
-	service := NewUserRegisterService(constraints, persister, mailer)
-	handler := NewUserRegisterHandler(service)
+	handler := InitHandler(db, mailer)
 
 	router.Method("POST", "/users", handler)
 }

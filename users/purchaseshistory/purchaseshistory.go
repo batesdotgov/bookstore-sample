@@ -7,8 +7,7 @@ import (
 )
 
 func SetupModule(router chi.Router, db *sql.DB) {
-	repo := NewPurchasesRepository(db)
-	handler := NewPurchasesHistoryHandler(repo, repo)
+	handler := InitHandler(db)
 
 	router.Method("GET", "/users/{id}/purchases", handler)
 }

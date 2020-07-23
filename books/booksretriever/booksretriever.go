@@ -7,10 +7,10 @@ import (
 )
 
 func SetupModule(router chi.Router, db *sql.DB) {
-	repo := NewBooksRetrieverRepository(db)
-
-	booksAvailableHandler := NewBooksAvailableHandler(repo)
-	booksDetailsHandler := NewBookDetailsHandler(repo)
+	var (
+		booksAvailableHandler = InitBooksAvailableHandler(db)
+		booksDetailsHandler   = InitBookDetailsHandler(db)
+	)
 
 	router.Method("GET", "/books", booksAvailableHandler)
 	router.Method("GET", "/books/{id}", booksDetailsHandler)

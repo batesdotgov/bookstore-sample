@@ -21,10 +21,11 @@ import (
 )
 
 type (
-	Middleware func(http.Handler) http.Handler
+	Middleware  func(http.Handler) http.Handler
+	Middlewares []Middleware
 )
 
-func NewHTTPRouter(middlewares ...Middleware) chi.Router {
+func NewHTTPRouter(middlewares Middlewares) chi.Router {
 	router := chi.NewRouter()
 
 	log.Printf("Registering %d middlewares into the http server", len(middlewares))
@@ -68,13 +69,7 @@ func CreateDatabaseSchema(ctx context.Context, db *sql.DB) {
 }
 
 func main() {
-	// create dependencies
-	middlewares := []Middleware{
-		NewTimeoutMiddleware(),
-		NewHTTPRecovererMiddleware(),
-		NewRequestIDMiddleware(),
-	}
-	router := NewHTTPRouter(middlewares...)
+	router := InitHTTPRouter()
 	db, err := database.NewMySQLConnection()
 	if err != nil {
 		panic(err)

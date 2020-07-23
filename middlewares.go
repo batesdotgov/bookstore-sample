@@ -6,6 +6,14 @@ import (
 	"github.com/go-chi/chi/middleware"
 )
 
+func NewMiddlewares() Middlewares {
+	return Middlewares{
+		NewTimeoutMiddleware(),
+		NewHTTPRecovererMiddleware(),
+		NewRequestIDMiddleware(),
+	}
+}
+
 const DefaultHTTPTimeout = 30 * time.Second
 
 func NewTimeoutMiddleware() Middleware {
